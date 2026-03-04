@@ -4,15 +4,15 @@
 #include <string>
 
 struct taskPeriodic {
-        std::string id;
-        int compTime;
-        int period;
+    std::string id;
+    int compTime;
+    int period;
 };
 
 struct taskAperiodic {
-        std::string id;
-        int compTime;
-        int releaseTime;
+    std::string id;
+    int compTime;
+    int releaseTime;
 };
 
 #endif

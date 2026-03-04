@@ -1,5 +1,3 @@
 #include "rate.hpp"
 
-void rateMonotic(){
-
-}
+void rateMonotic() {}
