@@ -1,29 +1,35 @@
 #include <iostream>
+#include <cstdlib>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <sstream>
 #include "rate.hpp"
 #include "edf_lst.hpp"
-
-struct taskPeriodic {
-        std::string id;
-        int compTime;
-        int period;
-};
-
-struct taskAperiodic {
-        std::string id;
-        int compTime;
-        int releaseTime;
-};
+#include "structDef.hpp"
 
 int main(int argc, char** argv) {
+	if (argc != 3) {
+		std::cerr << "Invalid number of arguments" << std::endl;
+		std::cerr << "First argument should be an input file" << std::endl;
+		std::cerr << "Second argument should be an output file" << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+
         std::string iFileName(argv[1]);
         std::string oFileName(argv[2]);
 
         std::ifstream iFile(iFileName);
+	if (!iFile) {
+		std::cerr << "Could not open input file " << iFileName << std::endl;
+		std::cerr << "Are you sure it exists?" << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
         std::ofstream oFile(oFileName);
+	if (!oFile) {
+                std::cerr << "Could not open output file " << oFileName << std::endl;
+                std::exit(EXIT_FAILURE);
+        }
 
         std::string line;
 
