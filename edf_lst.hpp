@@ -1,0 +1,2 @@
+void edf();
+void lst();
