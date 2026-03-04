@@ -1,0 +1,4 @@
+schedule*
+*.o
+*.txt
+.clang-format
