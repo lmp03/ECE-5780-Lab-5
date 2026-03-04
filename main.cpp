@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include "rate.hpp"
+#include "edf_lst.hpp"
 
 struct taskPeriodic {
         std::string id;
