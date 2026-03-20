@@ -173,4 +173,6 @@ int main(int argc, char **argv) {
         std::cout << t.compTime << std::endl;
         std::cout << t.releaseTime << std::endl;
     }
+
+    rateMonotic(periodicTaskList, aperiodicTaskList, simTime);
 }
