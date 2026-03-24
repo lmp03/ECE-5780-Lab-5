@@ -28,8 +28,9 @@ struct taskAperiodic {
 
     int preemptions = 0;
     int deadlineMisses = 0;
-    bool released = false;
     int priority;
+    int responseTime;
+    bool released;
 };
 
 #endif

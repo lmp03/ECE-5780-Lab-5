@@ -15,8 +15,10 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
     taskAperiodic *currentATask = nullptr;
     bool preempt = false;
 
-    for (int t = 0; t < simTime; t++) {
+    oFile << "---- Rate Monotonic Analysis ----" << std::endl;
 
+    for (int t = 0; t < simTime; t++) {
+        oFile << "t=" << t << ": ";
         preempt = false;
 
         // Release tasks
@@ -35,7 +37,7 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
         for (taskAperiodic &task : aperTasks) {
             if (t > task.deadline && task.remainingTime > 0) {
                 task.deadlineMisses++;
-                oFile << "t=" << t << ": deadline miss " << task.id << " ";
+                oFile << "deadline miss " << task.id << " ";
 
                 task.remainingTime = 0;
             }
@@ -70,25 +72,35 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
         }
 
         // Check for preemption
-
+        // If task to run next is different than next task to run
+        // and current task running still has work to be done
+        // and current task wasn't released this timestep
+        // (don't want to think it's a preemption because there's work to still
+        // do on the task if last timestep we finished the last period's work
+        // and this timestep we're starting a new period)
         if (currentTask != nullptr && nextTask != currentTask) {
-            if (currentTask->remainingTime > 0) {
+            if (currentTask->remainingTime > 0 &&
+                currentTask->deadline - currentTask->period != t) {
                 currentTask->preemptions++;
                 preempt = true;
             }
+            // If we were running an aperiodic task, and it get preempted by a
+            // periodic task
         } else if (currentATask != nullptr && nextTask != nullptr) {
             if (currentATask->remainingTime > 0) {
                 currentATask->preemptions++;
                 preempt = true;
             }
         }
+        // Periodic tasks can't be preempted by aperiodic tasks in RMA, so no
+        // need to check that case
 
         // Print this line
         if (nextTask != nullptr) {
             currentTask = nextTask;
             currentATask = nullptr;
             currentTask->remainingTime--;
-            oFile << "t=" << t << ": running task " << currentTask->id;
+            oFile << "running task " << currentTask->id;
             if (preempt) {
                 oFile << " preemption ";
             }
@@ -98,16 +110,19 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
             currentATask = nextATask;
 
             currentATask->remainingTime--;
-            oFile << "t=" << t << ": running task " << currentATask->id;
+            oFile << "running task " << currentATask->id;
             if (preempt) {
                 oFile << " preemption ";
+            }
+            if (currentATask->remainingTime == 0) {
+                currentATask->responseTime = (t - currentATask->releaseTime);
             }
         }
 
         else {
             currentTask = nullptr;
             currentATask = nullptr;
-            oFile << "t=" << t << ": idle";
+            oFile << "idle";
         }
 
         oFile << std::endl;
@@ -115,7 +130,9 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
 
     int totalPreemptions = 0;
     int totalMisses = 0;
-    oFile << "Task\tPreemptions\tDeadline Misses" << std::endl;
+    int numAper = 0;
+    double averageResponseTime = 0;
+    oFile << "\nTask\tPreemptions\tDeadline Misses" << std::endl;
     for (taskPeriodic task : perTasks) {
         oFile << task.id << "\t\t" << task.preemptions << "\t\t\t"
               << task.deadlineMisses << std::endl;
@@ -128,7 +145,16 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
               << task.deadlineMisses << std::endl;
         totalPreemptions += task.preemptions;
         totalMisses += task.deadlineMisses;
+        averageResponseTime += static_cast<double>(task.responseTime);
+        numAper++;
     }
-    oFile << "Total\t" << totalPreemptions << "\t\t\t" << totalMisses
-          << std::endl;
+    if (numAper != 0) {
+        averageResponseTime /= static_cast<double>(numAper);
+    }
+    oFile << "Total\t" << totalPreemptions << "\t\t\t" << totalMisses;
+    if (numAper != 0) {
+        oFile << "\nAperiodic Task Average Response Time "
+              << averageResponseTime;
+    }
+    oFile << std::endl;
 }
