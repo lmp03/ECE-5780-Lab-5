@@ -157,4 +157,5 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
               << averageResponseTime;
     }
     oFile << std::endl;
+    std::cout << "RMA Complete" << std::endl;
 }

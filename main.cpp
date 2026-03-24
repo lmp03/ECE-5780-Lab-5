@@ -178,13 +178,15 @@ int main(int argc, char **argv) {
                 if (pos != line.length()) {
                     std::cerr
                         << "Line specifying number of aperiodic tasks must "
-                           "contain a single integer"
+                           "contain a single integer\n It is possible you have "
+                           "given more periodic tasks than expected"
                         << std::endl;
                     std::exit(EXIT_FAILURE);
                 }
             } catch (const std::invalid_argument &) {
                 std::cerr << "Line specifying number of aperiodic tasks must "
-                             "contain a single integer"
+                             "contain a single integer\n It is possible you "
+                             "have given more periodic tasks than expected"
                           << std::endl;
                 std::exit(EXIT_FAILURE);
             } catch (const std::out_of_range &) {
@@ -274,5 +276,6 @@ int main(int argc, char **argv) {
         aperiodicTaskList.emplace_back(t);
     }
 
+    std::cout << "Tasks read in successfully" << std::endl;
     rateMonotonic(periodicTaskList, aperiodicTaskList, simTime, oFile);
 }
