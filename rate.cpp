@@ -15,8 +15,6 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
     taskAperiodic *currentATask = nullptr;
     bool preempt = false;
 
-    oFile << "---- Rate Monotonic Analysis ----" << std::endl;
-
     for (int t = 0; t < simTime; t++) {
         oFile << "t=" << t << ": ";
         preempt = false;
@@ -132,7 +130,8 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
     int totalMisses = 0;
     int numAper = 0;
     double averageResponseTime = 0;
-    oFile << "\nTask\tPreemptions\tDeadline Misses" << std::endl;
+    oFile << "\n--- RMA Summary ---" << std::endl;
+    oFile << "Task\tPreemptions\tDeadline Misses" << std::endl;
     for (taskPeriodic task : perTasks) {
         oFile << task.id << "\t\t" << task.preemptions << "\t\t\t"
               << task.deadlineMisses << std::endl;
@@ -153,9 +152,8 @@ void rateMonotonic(std::vector<taskPeriodic> &perTasks,
     }
     oFile << "Total\t" << totalPreemptions << "\t\t\t" << totalMisses;
     if (numAper != 0) {
-        oFile << "\nAperiodic Task Average Response Time "
-              << averageResponseTime;
+        oFile << "\nAverage Aperiodic Response Time " << averageResponseTime
+              << " msec";
     }
-    oFile << std::endl;
-    std::cout << "RMA Complete" << std::endl;
+    oFile << std::endl << std::endl;
 }

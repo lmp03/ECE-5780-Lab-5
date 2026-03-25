@@ -1,4 +1,4 @@
-#include "edf_lst.hpp"
+#include "edf_llf.hpp"
 #include "rate.hpp"
 #include "structDef.hpp"
 #include <cstdlib>
@@ -276,6 +276,18 @@ int main(int argc, char **argv) {
         aperiodicTaskList.emplace_back(t);
     }
 
-    std::cout << "Tasks read in successfully" << std::endl;
+    oFile << "--- RMA Simulation ---\n";
     rateMonotonic(periodicTaskList, aperiodicTaskList, simTime, oFile);
+
+    resetTasks(periodicTaskList, aperiodicTaskList);
+
+    oFile << "--- EDF Simulation ---\n";
+    edf(periodicTaskList, aperiodicTaskList, simTime, oFile);
+
+    resetTasks(periodicTaskList, aperiodicTaskList);
+
+    oFile << "\n\n--- LLF Simulation ---\n";
+    llf(periodicTaskList, aperiodicTaskList, simTime, oFile);
+
+    std::cout << "Complete" << std::endl;
 }
