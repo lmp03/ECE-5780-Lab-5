@@ -2,9 +2,11 @@
 #define RATE_HPP
 
 #include "structDef.hpp"
+#include <fstream>
 #include <vector>
 
-void rateMonotic(std::vector<taskPeriodic> &perTasks,
-                 std::vector<taskAperiodic> &aperTasks, int simTime);
+void rateMonotonic(std::vector<taskPeriodic> &perTasks,
+                   std::vector<taskAperiodic> &aperTasks, int simTime,
+                   std::ofstream &oFile);
 
 #endif
